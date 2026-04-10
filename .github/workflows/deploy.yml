@@ -50,13 +50,12 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd django-soft-ui-dashboard
-            git pull origin main
+            set -e
 
-            aws ecr get-login-password --region us-east-1 \
-            | docker login --username AWS \
-            --password-stdin ${{ secrets.ECR_REGISTRY }}
+            cd django-soft-ui-dashboard
+
+            # NO git pull (important fix)
 
             docker compose pull
-            docker compose down
+            docker compose down || true
             docker compose up -d
